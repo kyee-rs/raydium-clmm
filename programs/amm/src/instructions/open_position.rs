@@ -10,7 +10,9 @@ use anchor_spl::metadata::Metadata;
 use anchor_spl::token::{self, Token};
 use anchor_spl::token_2022::{self, spl_token_2022::instruction::AuthorityType};
 use anchor_spl::token_interface::{Mint, Token2022, TokenAccount};
-use mpl_token_metadata::{instruction::create_metadata_accounts_v3, state::Creator};
+use mpl_token_metadata::instructions::CreateMetadataAccountV3InstructionArgs;
+use mpl_token_metadata::types::DataV2;
+use mpl_token_metadata::{instructions::CreateMetadataAccountV3, types::Creator};
 use std::cell::RefMut;
 #[cfg(feature = "enable-log")]
 use std::convert::identity;
@@ -344,7 +346,6 @@ pub fn open_position_v1<'a, 'b, 'c: 'info, 'info>(
         &ctx.accounts.system_program,
         &ctx.accounts.token_program,
         &ctx.accounts.associated_token_program,
-        &ctx.accounts.metadata_program,
         None,
         None,
         None,
@@ -394,7 +395,6 @@ pub fn open_position_v2<'a, 'b, 'c: 'info, 'info>(
         &ctx.accounts.system_program,
         &ctx.accounts.token_program,
         &ctx.accounts.associated_token_program,
-        &ctx.accounts.metadata_program,
         Some(ctx.accounts.token_program_2022.clone()),
         Some(ctx.accounts.vault_0_mint.clone()),
         Some(ctx.accounts.vault_1_mint.clone()),
@@ -432,7 +432,6 @@ pub fn open_position<'a, 'b, 'c: 'info, 'info>(
     system_program: &'b Program<'info, System>,
     token_program: &'b Program<'info, Token>,
     _associated_token_program: &'b Program<'info, AssociatedToken>,
-    metadata_program: &'b Program<'info, Metadata>,
     token_program_2022: Option<Program<'info, Token2022>>,
     vault_0_mint: Option<Box<InterfaceAccount<'info, Mint>>>,
     vault_1_mint: Option<Box<InterfaceAccount<'info, Mint>>>,
@@ -582,7 +581,6 @@ pub fn open_position<'a, 'b, 'c: 'info, 'info>(
         position_nft_mint,
         position_nft_account,
         metadata_account,
-        metadata_program,
         token_program,
         system_program,
         rent,
@@ -927,7 +925,6 @@ fn create_nft_with_metadata<'info>(
     position_nft_mint: &Box<InterfaceAccount<'info, Mint>>,
     position_nft_account: &Box<InterfaceAccount<'info, TokenAccount>>,
     metadata_account: &UncheckedAccount<'info>,
-    metadata_program: &Program<'info, Metadata>,
     token_program: &Program<'info, Token>,
     system_program: &Program<'info, System>,
     rent: &Sysvar<'info, Rent>,
@@ -950,30 +947,38 @@ fn create_nft_with_metadata<'info>(
         1,
     )?;
     if with_matedata {
-        let create_metadata_ix = create_metadata_accounts_v3(
-            metadata_program.key(),
-            metadata_account.key(),
-            position_nft_mint.key(),
-            pool_state_loader.key(),
-            payer.key(),
-            pool_state_loader.key(),
-            String::from("Raydium Concentrated Liquidity"),
-            String::from("RCL"),
-            format!(
-                "https://dynamic-ipfs.raydium.io/clmm/position?id={}",
-                personal_position_id.to_string()
-            ),
-            Some(vec![Creator {
-                address: pool_state_loader.key(),
-                verified: true,
-                share: 100,
-            }]),
-            0,
-            true,
-            false,
-            None,
-            None,
-            None,
+        let ctx = mpl_token_metadata::instructions::CreateMetadataAccountV3 {
+            metadata: metadata_account.key(),
+            mint: position_nft_mint.key(),
+            mint_authority: pool_state_loader.key(),
+            payer: payer.key(),
+            update_authority: (pool_state_loader.key(), true),
+            system_program: *system_program.key,
+            rent: Some(rent.key()),
+        };
+
+        let create_metadata_ix = CreateMetadataAccountV3::instruction(
+            &ctx,
+            CreateMetadataAccountV3InstructionArgs {
+                data: DataV2 {
+                    name: String::from("Raydium Concentrated Liquidity"),
+                    symbol: String::from("RCL"),
+                    uri: format!(
+                        "https://dynamic-ipfs.raydium.io/clmm/position?id={}",
+                        personal_position_id.to_string()
+                    ),
+                    collection: None,
+                    creators: Some(vec![Creator {
+                        address: pool_state_loader.key(),
+                        verified: true,
+                        share: 100,
+                    }]),
+                    seller_fee_basis_points: 0,
+                    uses: None,
+                },
+                is_mutable: false,
+                collection_details: None,
+            },
         );
         solana_program::program::invoke_signed(
             &create_metadata_ix,
