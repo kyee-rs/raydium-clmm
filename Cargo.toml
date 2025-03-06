@@ -1,9 +1,6 @@
 [workspace]
 resolver = "2"
-members = [
-    "programs/*",
-    "client",
-]
+members = ["programs/*", "client"]
 
 [profile.test]
 opt-level = 0
@@ -17,3 +14,50 @@ overflow-checks = true
 opt-level = 3
 incremental = false
 codegen-units = 1
+
+[patch.crates-io]
+anchor-lang = { git = "https://github.com/coral-xyz/anchor.git", branch = "master" }
+curve25519-dalek = { git = "https://github.com/anza-xyz/curve25519-dalek.git", rev = "b500cdc2a920cd5bff9e2dd974d7b97349d61464" }
+solana-account = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-account-info = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-atomic-u64 = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-bincode = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-borsh = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-clock = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-cpi = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-decode-error = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+spl-pod = { git = "https://github.com/solana-program/libraries.git", branch = "main" }
+spl-type-length-value = { git = "https://github.com/solana-program/libraries.git", branch = "main" }
+solana-derivation-path = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-epoch-schedule = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-feature-set = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-fee-calculator = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-hash = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-inflation = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-instruction = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-inline-spl = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-last-restart-slot = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-msg = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-native-token = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-packet = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-precompile-error = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-program = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-program-entrypoint = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-program-error = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-program-memory = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-program-option = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-program-pack = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-pubkey = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-rent = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-sanitize = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-secp256r1-program = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-serde-varint = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-serialize-utils = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-sha256-hasher = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-signature = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-slot-hashes = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-slot-history = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-stable-layout = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-sysvar-id = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+solana-transaction-error = { git = "https://github.com/anza-xyz/agave.git", tag = "v2.1.11" }
+spl-token-swap = { git = "https://github.com/solana-labs/solana-program-library.git", branch = "master" }
